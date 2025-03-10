@@ -1,11 +1,22 @@
-# test_app .py
 import unittest
-# For a simple example , we simply test True .
+from app import app
 
 
-class TestApp (unittest . TestCase):
+class TestApp(unittest.TestCase):
 
-    def test_output(self):
-        self . assertTrue(True)
-        if __name__ == " __main__ ":
-            unittest . main()
+    def setUp(self):
+        self.app = app.test_client()
+
+    def test_home_route(self):
+        response = self.app.get('/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_status_route(self):
+        response = self.app.get('/status')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.json, {"status": "OK", "message": "Service is running"})
+
+
+if __name__ == "__main__":
+    unittest.main()
